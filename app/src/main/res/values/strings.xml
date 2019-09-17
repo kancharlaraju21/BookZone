@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Book Zone</string>
+    <string name="bookTitle">Title: </string>
+    <string name="bookAuthor">Author: </string>
+    <string name="bookPrice">Price: </string>
+    <string name="bookPurchase">Purchase</string>
+    <string name="bookStatus">Status:</string>
+    <string name="Buy">Home</string>
+    <string name="Sell">Add</string>
+    <string name="Others">Others</string>
+    <string name="Internship">Internship</string>
+    <string name="title_activity_my_intern_ship">myInternShip</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+</resources>

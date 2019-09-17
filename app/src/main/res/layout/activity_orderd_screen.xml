@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".orderd_screen">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/top"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_width="50dp"
+        android:id="@+id/tick"
+        android:padding="10dp"
+        android:src="@drawable/tick"
+        android:layout_height="50dp">
+    </ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-light"
+        android:text="Order Placed"
+        android:textColor="#867373"
+        android:layout_toRightOf="@id/tick"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold">
+    </TextView>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_below="@id/top"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:id="@+id/bookPicturemine"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"></ImageView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/myBookTitlemine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/bookTitle"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/myBookAuthormine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/bookAuthor"
+                android:textColor="#000"
+                android:textSize="12sp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/myBookStatusmine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/bookStatus"
+                android:textColor="#D30000"
+                android:textSize="14sp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/myBookPricemine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:text="@string/bookPrice"
+                android:textColor="#923F3F"
+                android:textSize="24sp"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/myBookDescriptionmine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Description:"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal"></TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/grey" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Delivery To"
+                android:textColor="#867373"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold">
+            </TextView>
+            <TextView
+                android:id="@+id/myBookDeliveryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Name"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal">
+            </TextView>
+            <TextView
+                android:id="@+id/myBookDeliveryPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Phone"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal">
+            </TextView>
+            <TextView
+                android:id="@+id/myBookDeliveryEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Email"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal">
+            </TextView>
+            <TextView
+                android:id="@+id/myBookDeliveryAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Address"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal">
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/grey" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Mode of Payment"
+                android:textColor="#867373"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold">
+            </TextView>
+            <TextView
+                android:id="@+id/myBookDeliveryPayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Payment Method"
+                android:textColor="#000"
+                android:textSize="15sp"
+                android:textStyle="normal">
+            </TextView>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

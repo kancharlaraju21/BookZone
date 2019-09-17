@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/buy"
+        android:title="@string/Buy"
+        android:state_checked="true"
+        android:color="@android:color/holo_blue_dark"
+        android:icon="@drawable/ic_action_home"
+        ></item>
+    <item android:id="@+id/sell"
+        android:title="@string/Sell"
+        android:state_checked="true"
+        android:color="@android:color/holo_blue_dark"
+        android:icon="@drawable/ic_action_sell"
+        ></item>
+    <item android:id="@+id/internship"
+        android:title="@string/Internship"
+        android:state_checked="true"
+        android:color="@android:color/holo_blue_dark"
+        android:icon="@drawable/ic_action_intern"
+        ></item>
+    <item android:id="@+id/others"
+        android:title="@string/Others"
+        android:state_checked="true"
+        android:color="@android:color/holo_blue_dark"
+        android:icon="@drawable/ic_action_other"
+        ></item>
+
+</menu>
