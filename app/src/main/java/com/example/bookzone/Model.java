@@ -1,7 +1,23 @@
 package com.example.bookzone;
 
 public class Model {
-    String title,image,author,price,des,status; //Firebase Columns
+    String title;
+    String image;
+    String author;
+    String price;
+    String des;
+    String status;
+    String uid;
+    String stream; //Firebase Columns
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     //constructor
     public Model(){
@@ -9,6 +25,13 @@ public class Model {
     }
 
     //getters and setters
+    public String getStream() {
+        return stream;
+    }
+
+    public void setStream(String stream) {
+        this.stream = stream;
+    }
 
 
     public String getStatus() {

@@ -30,6 +30,7 @@ public class user_forgot_password extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         signin=findViewById(R.id.user_signin_button);
@@ -41,7 +42,17 @@ public class user_forgot_password extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email_entered=user_email.getText().toString();
-                if(!(email_entered.isEmpty())) {
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email_entered).matches()) {
+                    user_email.setError("please enter valid email address");
+                    user_email.requestFocus();
+                }
+                if (email_entered.equals("")) {
+                    user_email.setError("please enter email address");
+                    user_email.requestFocus();
+                }
+                if (!email_entered.equals("")
+                        && android.util.Patterns.EMAIL_ADDRESS.matcher(email_entered).matches()
+                ) {
                     FirebaseAuth.getInstance().sendPasswordResetEmail(email_entered)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

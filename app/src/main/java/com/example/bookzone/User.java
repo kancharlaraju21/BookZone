@@ -4,6 +4,7 @@ public class User {
     public String name;
     public String email;
     public String phone;
+    public String orders;
 
     public String getAddress() {
         return address;
@@ -13,13 +14,22 @@ public class User {
         this.address = address;
     }
 
+    public String getOrders() {
+        return orders;
+    }
+
+    public void setOrders(String orders) {
+        this.orders = orders;
+    }
+
     public String address;
 
-    public User(String name, String email, String phone,String address) {
+    public User(String name, String email, String phone,String address,String orders) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address=address;
+        this.orders=orders;
     }
 
     public String getName() {

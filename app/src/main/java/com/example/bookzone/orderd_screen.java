@@ -1,17 +1,24 @@
 package com.example.bookzone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class orderd_screen extends AppCompatActivity {
     ImageView bookPhoto;
     TextView bookTitleMine,bookAuthorMine,bookPriceMine,bookDesMine,bookStatusMine,book_buyerName,book_buyerEmail,
             book_buyerPhone,book_buyerAddress,book_buyerMethod;
+    TextView ownerName,ownerEmail,ownerPhone,ownerAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,10 @@ public class orderd_screen extends AppCompatActivity {
         book_buyerAddress=findViewById(R.id.myBookDeliveryAddress);
         book_buyerPhone=findViewById(R.id.myBookDeliveryPhone);
         book_buyerMethod=findViewById(R.id.myBookDeliveryPayment);
+        ownerAddress=findViewById(R.id.myBookOwnerAddress);
+        ownerEmail=findViewById(R.id.myBookOwnerEmail);
+        ownerPhone=findViewById(R.id.myBookOwnerPhone);
+        ownerName=findViewById(R.id.myBookOwnerName);
 
         //get data from intent
         String image=getIntent().getStringExtra("image");
@@ -42,6 +53,31 @@ public class orderd_screen extends AppCompatActivity {
         String buyer_phone=getIntent().getStringExtra("bphone");
         String buyer_address=getIntent().getStringExtra("baddress");
         String buyer_method=getIntent().getStringExtra("bmethod");
+        String uid=getIntent().getStringExtra("uid");
+
+        //get owner details from database
+        String userid=uid;
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                String name=dataSnapshot.child("name").getValue().toString();
+                String phone=dataSnapshot.child("phone").getValue().toString();
+                String email=dataSnapshot.child("email").getValue().toString();
+                String address=dataSnapshot.child("address").getValue().toString();
+                System.out.println(email);
+                ownerName.setText("Name: "+name);
+                ownerEmail.setText("Email: "+email);
+                ownerAddress.setText("Address: "+address);
+                ownerPhone.setText("Phone: "+phone);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         //set Data to views

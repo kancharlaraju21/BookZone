@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,7 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class sellBook extends AppCompatActivity {
-    EditText uTitle,uAuthor,uPrice,uDes,uStatus;
+    EditText uTitle,uAuthor,uPrice,uDes,uStatus,uStream,uTime;
     ImageView uImage;
     Button upload;
     //Folder Path to Firebase Storage
@@ -40,6 +42,10 @@ public class sellBook extends AppCompatActivity {
     String mDatabasePath="Data";
     //Creating URI
     Uri mFilePathUri;
+
+    //Firebase user Details
+
+
 
     //Creating Storage Reference and Database Reference
     StorageReference mStorageReference;
@@ -101,6 +107,8 @@ public class sellBook extends AppCompatActivity {
         uImage=findViewById(R.id.uBookImage);
         upload=findViewById(R.id.uploadimg);
         uStatus=findViewById(R.id.uBookStatus);
+        uStream=findViewById(R.id.uBookStream);
+        uTime=findViewById(R.id.uBookTime);
 
 
         //Image click to choose Image
@@ -164,10 +172,17 @@ public class sellBook extends AppCompatActivity {
                                     String uploadDes=uDes.getText().toString().trim();
                                     String uploadStatus=uStatus.getText().toString().trim();
                                     String uploadSearch=uploadTitle.toLowerCase();
+                                    String uploadStream=uStream.getText().toString().toUpperCase();
+                                    String uploadTime=uTime.getText().toString();
+                                    uploadStatus+=":"+uploadTime+" Days";
+                                    System.out.println(uploadStatus);
+                                    //get User ID
+                                    FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+                                    String userId=firebaseUser.getUid();
                                     //Hide Dialog Box
                                     mProgressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(),"Uploaded Successfully.....",Toast.LENGTH_LONG).show();
-                                    ImageUploadInfo imageUploadInfo=new ImageUploadInfo(uploadTitle,imageUrl,uploadDes,uploadAuthor,uploadPrice,uploadSearch,uploadStatus);
+                                    ImageUploadInfo imageUploadInfo=new ImageUploadInfo(uploadTitle,imageUrl,uploadDes,uploadAuthor,uploadPrice,uploadSearch,uploadStatus,uploadStream,userId);
                                     //get Image Id
                                     String uploadedImageId=mDatabaseReference.push().getKey();
                                     //Add Image to Database Reference

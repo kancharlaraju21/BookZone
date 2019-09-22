@@ -36,6 +36,7 @@ public class create_user extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_create_user);
         email_entered=findViewById(R.id.user_email_create);
@@ -55,30 +56,62 @@ public class create_user extends AppCompatActivity {
                 final String name=name_entered.getText().toString();
                 final String phone=phone_entered.getText().toString();
                 final String address=address_entered.getText().toString();
-                if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)|| TextUtils.isEmpty(name) || password.length()<6){
-                    Toast.makeText(getApplicationContext(),"Enter Details",Toast.LENGTH_LONG).show();
-                    return;
+                // Validation
+
+                if(name.equals("") || name.length()<1)
+                {
+                    name_entered.setError("Enter Name");
+                    name_entered.requestFocus();
                 }
-                else {
+                if(address.equals("")|| address.length()<1)
+                {
+                    address_entered.setError("Enter Address");
+                    address_entered.requestFocus();
+                }
+                if (password.length() < 6) {
+                    password_entered.setError("password minimum contain 6 character");
+                    password_entered.requestFocus();
+                }
+                if (password.equals("")) {
+                    password_entered.setError("please enter password");
+                    password_entered.requestFocus();
+                }
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    email_entered.setError("please enter valid email address");
+                    email_entered.requestFocus();
+                }
+                if (email.equals("")) {
+                    email_entered.setError("please enter email address");
+                    email_entered.requestFocus();
+                }
+                if(phone.length()!=10)
+                {
+                    phone_entered.setError("please enter valid phone number");
+                    phone_entered.requestFocus();
+                }
+                if (!email.equals("") &&
+                        password.length() >= 6 &&
+                        !password.equals("")
+                        && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                        && !phone.equals("") && phone.length()==10
+                ) {
+
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(create_user.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@androidx.annotation.NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        User user=new User(name,email,phone,address);
+                                        User user = new User(name, email, phone, address,null);
                                         database.getReference("Users")
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful())
-                                                {
+                                                if (task.isSuccessful()) {
                                                     Toast.makeText(getApplicationContext(), "Successfully created and Data Stored", Toast.LENGTH_LONG).show();
                                                     Intent intent = new Intent(create_user.this, login_user.class);
                                                     startActivity(intent);
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     Log.w("Raju2 : ", task.getException());
                                                 }
                                             }

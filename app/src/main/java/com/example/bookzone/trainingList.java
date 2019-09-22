@@ -1,6 +1,8 @@
 package com.example.bookzone;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -50,16 +52,16 @@ public class trainingList  extends Fragment {
     };
 
     String[] links={
-            "<a href=https://internshala.com/internship/detail/ui-design-work-from-home-job-internship-at-hack-planet-technologies-private-limited1564486904>https://internshala.com/internship/detail/ui-design-work-from-home-job-internship-at-hack-planet-technologies-private-limited1564486904</a>",
-            "<a href=https://internshala.com/internship/detail/unity-3d-game-development-work-from-home-job-internship-at-vikalp-india-private-limited1564074389>https://internshala.com/internship/detail/unity-3d-game-development-work-from-home-job-internship-at-vikalp-india-private-limited1564074389</a>",
-            "<a href=https://internshala.com/internship/detail/mobile-app-development-work-from-home-job-internship-at-do-your-thng1564634273>https://internshala.com/internship/detail/mobile-app-development-work-from-home-job-internship-at-do-your-thng1564634273</a>",
-            "<a href=https://internshala.com/internship/detail/content-development-metallurgical-and-material-engineering-work-from-home-job-internship-at-sanfoundry1562222140>https://internshala.com/internship/detail/content-development-metallurgical-and-material-engineering-work-from-home-job-internship-at-sanfoundry1562222140</a>",
-            "<a href=https://internshala.com/internship/detail/content-development-mechanical-engineering-work-from-home-job-internship-at-sanfoundry1562222514>https://internshala.com/internship/detail/content-development-mechanical-engineering-work-from-home-job-internship-at-sanfoundry1562222514</a>",
-            "<a href=https://internshala.com/internship/detail/robotic-process-automation-work-from-home-job-internship-at-g1ant1563998124>https://internshala.com/internship/detail/robotic-process-automation-work-from-home-job-internship-at-g1ant1563998124</a>",
-            "<a href=https://trainings.internshala.com/python-training>https://trainings.internshala.com/python-training</a>",
-            "<a href=https://trainings.internshala.com/autocad-training>https://trainings.internshala.com/autocad-training</a>",
-            "<a href=https://trainings.internshala.com/c-plus-plus-training>https://trainings.internshala.com/c-plus-plus-training</a>",
-            "<a href=http://google.com>https://google.com</a>"
+            "https://internshala.com/internship/detail/ui-design-work-from-home-job-internship-at-hack-planet-technologies-private-limited1564486904>https://internshala.com/internship/detail/ui-design-work-from-home-job-internship-at-hack-planet-technologies-private-limited1564486904",
+            "https://internshala.com/internship/detail/unity-3d-game-development-work-from-home-job-internship-at-vikalp-india-private-limited1564074389>https://internshala.com/internship/detail/unity-3d-game-development-work-from-home-job-internship-at-vikalp-india-private-limited1564074389",
+            "https://internshala.com/internship/detail/mobile-app-development-work-from-home-job-internship-at-do-your-thng1564634273>https://internshala.com/internship/detail/mobile-app-development-work-from-home-job-internship-at-do-your-thng1564634273",
+            "https://internshala.com/internship/detail/content-development-metallurgical-and-material-engineering-work-from-home-job-internship-at-sanfoundry1562222140>https://internshala.com/internship/detail/content-development-metallurgical-and-material-engineering-work-from-home-job-internship-at-sanfoundry1562222140",
+            "https://internshala.com/internship/detail/content-development-mechanical-engineering-work-from-home-job-internship-at-sanfoundry1562222514>https://internshala.com/internship/detail/content-development-mechanical-engineering-work-from-home-job-internship-at-sanfoundry1562222514",
+            "https://internshala.com/internship/detail/robotic-process-automation-work-from-home-job-internship-at-g1ant1563998124>https://internshala.com/internship/detail/robotic-process-automation-work-from-home-job-internship-at-g1ant1563998124",
+            "https://trainings.internshala.com/python-training>https://trainings.internshala.com/python-training",
+            "https://trainings.internshala.com/autocad-training>https://trainings.internshala.com/autocad-training",
+            "https://trainings.internshala.com/c-plus-plus-training>https://trainings.internshala.com/c-plus-plus-training",
+            "http://google.com>https://google.com"
     };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +91,7 @@ public class trainingList  extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater=(LayoutInflater)getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row=layoutInflater.inflate(R.layout.row,parent,false);
             ImageView imageView=(ImageView)row.findViewById(R.id.image);
@@ -102,6 +104,14 @@ public class trainingList  extends Fragment {
             txt2.setClickable(true);
             txt2.setMovementMethod(LinkMovementMethod.getInstance());
             txt2.setText(Html.fromHtml(sLinks[position],Html.FROM_HTML_MODE_COMPACT));
+            final String url=links[position];
+            txt2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+            });
             //txt2.setAutoLinkMask(Linkify.WEB_URLS);
             txt.setText(sTitle[position]);
             return row;

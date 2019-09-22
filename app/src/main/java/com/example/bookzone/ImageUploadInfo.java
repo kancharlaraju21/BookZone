@@ -7,6 +7,25 @@ public class ImageUploadInfo {
     String des;
     String author;
     String price;
+    String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getStream() {
+        return stream;
+    }
+
+    public void setStream(String stream) {
+        this.stream = stream;
+    }
+
+    String stream;
 
     public String getStatus() {
         return status;
@@ -31,7 +50,7 @@ public class ImageUploadInfo {
     public ImageUploadInfo() {
     }
 
-    public ImageUploadInfo(String title, String image, String des, String author, String price,String search,String status) {
+    public ImageUploadInfo(String title, String image, String des, String author, String price,String search,String status,String stream,String uid) {
         this.title = title;
         this.image = image;
         this.des = des;
@@ -39,6 +58,8 @@ public class ImageUploadInfo {
         this.price = price;
         this.search=search;
         this.status=status;
+        this.stream=stream;
+        this.uid=uid;
     }
 
     public String getTitle() {

@@ -1,6 +1,7 @@
 package com.example.bookzone;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -62,7 +63,8 @@ public class user_dashboard extends AppCompatActivity {
     SharedPreferences msharedPreferences; //for saving stored settings
     RecyclerView mrecyclerView;
     FirebaseDatabase mfirebaseDatabase;
-    DatabaseReference mRef;
+    DatabaseReference mRef,sortRef;
+    Boolean mySearch,mySort;
 
 
     @Override
@@ -106,6 +108,11 @@ public class user_dashboard extends AppCompatActivity {
 
         mrecyclerView=findViewById(R.id.myRecyclerview);
         mrecyclerView.setHasFixedSize(true);
+        mlinearLayoutManager=new LinearLayoutManager(this);
+        mlinearLayoutManager.setReverseLayout(true);
+        mlinearLayoutManager.setStackFromEnd(true);
+        //Linear Layout
+        mrecyclerView.setLayoutManager(mlinearLayoutManager);
         //shared Reference
         msharedPreferences=getSharedPreferences("SortSettings",MODE_PRIVATE);
         String mSorting=msharedPreferences.getString("Sort","newest");//Default
@@ -115,6 +122,8 @@ public class user_dashboard extends AppCompatActivity {
            //This will load from bottom to up
             mlinearLayoutManager.setReverseLayout(true);
             mlinearLayoutManager.setStackFromEnd(true);
+            //Linear Layout
+            mrecyclerView.setLayoutManager(mlinearLayoutManager);
         }
         else if(mSorting.equals("oldest"))
         {
@@ -122,14 +131,13 @@ public class user_dashboard extends AppCompatActivity {
             //This will load from top to bottom
             mlinearLayoutManager.setReverseLayout(false);
             mlinearLayoutManager.setStackFromEnd(false);
+            //Linear Layout
+            mrecyclerView.setLayoutManager(mlinearLayoutManager);
+
+
         }
 
-
-        //Linear Layout
-        mrecyclerView.setLayoutManager(mlinearLayoutManager);
-
         //send Query to Firebase
-
         mfirebaseDatabase=FirebaseDatabase.getInstance();
         mRef=mfirebaseDatabase.getReference("Data");
 
@@ -142,7 +150,7 @@ public class user_dashboard extends AppCompatActivity {
     private void firebaseSearch(String searchText)
     {
         String query=searchText.toLowerCase();
-        Query firebaseSearchQuery =mRef.orderByChild("search").startAt(query).endAt(query+ "\uf8ff");
+        Query firebaseSearchQuery = mRef.orderByChild("search").startAt(query).endAt(query+'\uf8ff');
         FirebaseRecyclerAdapter<Model,ViewHolder> firebaseRecyclerAdapter =new FirebaseRecyclerAdapter<Model, ViewHolder>(
                 Model.class,
                 R.layout.cardview,
@@ -169,6 +177,7 @@ public class user_dashboard extends AppCompatActivity {
                         String myDes=getItem(position).getDes();
                         String myImage=getItem(position).getImage();
                         String myStatus=getItem(position).getStatus();
+                        String myUserId=getItem(position).getUid();
 
                         //pass this to new activity
                         Intent intent=new Intent(user_dashboard.this,bookPurchase.class);
@@ -179,6 +188,7 @@ public class user_dashboard extends AppCompatActivity {
                         intent.putExtra("price",myPrice);
                         intent.putExtra("des",myDes);
                         intent.putExtra("status",myStatus);
+                        intent.putExtra("uid",myUserId);
                         startActivity(intent);
 
 
@@ -197,7 +207,67 @@ public class user_dashboard extends AppCompatActivity {
         mrecyclerView.setAdapter(firebaseRecyclerAdapter);
 
     }
+    //sort Data by Branch
+    private void firebaseSort(String sortText)
+    {
+        mRef=FirebaseDatabase.getInstance().getReference();
+        Query firebaseSearchQuery = mRef.child("Data").orderByChild("stream").equalTo(sortText);
+        FirebaseRecyclerAdapter<Model,ViewHolder> firebaseRecyclerAdapter =new FirebaseRecyclerAdapter<Model, ViewHolder>(
+                Model.class,
+                R.layout.cardview,
+                ViewHolder.class,
+                firebaseSearchQuery
+        ) {
+            @Override
+            protected void populateViewHolder(ViewHolder viewHolder, Model model, int i) {
 
+                viewHolder.setDetails(getApplicationContext(),model.getTitle(),model.getAuthor(),model.getPrice(),model.getImage(),model.getDes(),model.getStatus());
+
+            }
+            @Override
+            public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                ViewHolder viewHolder=super.onCreateViewHolder(parent, viewType);
+                viewHolder.setOnClickListner(new ViewHolder.ClickListner() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        //get data from firebase position clicked
+                        String myTitle=getItem(position).getTitle();
+                        String myAuthor=getItem(position).getAuthor();
+                        String myPrice=getItem(position).getPrice();
+                        String myDes=getItem(position).getDes();
+                        String myImage=getItem(position).getImage();
+                        String myStatus=getItem(position).getStatus();
+                        String myUserId=getItem(position).getUid();
+
+                        //pass this to new activity
+                        Intent intent=new Intent(user_dashboard.this,bookPurchase.class);
+
+                        intent.putExtra("image",myImage);
+                        intent.putExtra("title",myTitle);
+                        intent.putExtra("author",myAuthor);
+                        intent.putExtra("price",myPrice);
+                        intent.putExtra("des",myDes);
+                        intent.putExtra("status",myStatus);
+                        intent.putExtra("uid",myUserId);
+                        startActivity(intent);
+
+
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        //Nothing
+
+                    }
+                });
+                return viewHolder;
+            }
+        };
+        //set Adapter to Search View
+        mrecyclerView.setAdapter(firebaseRecyclerAdapter);
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -205,6 +275,7 @@ public class user_dashboard extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu,menu);
         MenuItem item=menu.findItem(R.id.action_search);
         SearchView searchView=(SearchView) MenuItemCompat.getActionView(item);
+        searchView.performClick();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -241,7 +312,7 @@ public class user_dashboard extends AppCompatActivity {
 
     private void showSortDialog() {
         //options to display in dialog box
-        String[] sortOptions={"Newest","Oldest"};
+        String[] sortOptions={"New Books","CSE-Books","EEE-Books","Civil-Books","ECE-Books","Mech-Books","Old Books"};
         //Create Alert box
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setTitle("sort by")
@@ -259,8 +330,30 @@ public class user_dashboard extends AppCompatActivity {
                             recreate();//restart activity to take changes
 
 
+
                         }
                         else if(which==1)
+                        {
+                            firebaseSort("CSE");
+
+                        }
+                        else if(which==2)
+                        {
+                            firebaseSort("EEE");
+                        }
+                        else if(which==3)
+                        {
+                            firebaseSort("CIVIL");
+                        }
+                        else if(which==4)
+                        {
+                            firebaseSort("ECE");
+                        }
+                        else if(which==5)
+                        {
+                            firebaseSort("MECH");
+                        }
+                        else if(which==6)
                         {
                             //oldest
                             SharedPreferences.Editor editor=msharedPreferences.edit();
@@ -268,6 +361,8 @@ public class user_dashboard extends AppCompatActivity {
                             editor.apply();
                             recreate();
                         }
+
+
                     }
                 });
         builder.show();
@@ -296,7 +391,8 @@ public class user_dashboard extends AppCompatActivity {
                 viewHolder.setOnClickListner(new ViewHolder.ClickListner() {
                     @Override
                     public void onItemClick(View view, int position) {
-
+                        String uid = mRef.child("Data").push().getKey();
+                        System.out.println("What is this : "+uid);
 
                         //get data from firebase position clicked
                         String myTitle=getItem(position).getTitle();
@@ -305,6 +401,7 @@ public class user_dashboard extends AppCompatActivity {
                         String myDes=getItem(position).getDes();
                         String myImage=getItem(position).getImage();
                         String myStatus=getItem(position).getStatus();
+                        String myUserId=getItem(position).getUid();
 
                         //pass this to new activity
                         Intent intent=new Intent(user_dashboard.this,bookPurchase.class);
@@ -315,6 +412,7 @@ public class user_dashboard extends AppCompatActivity {
                         intent.putExtra("price",myPrice);
                         intent.putExtra("des",myDes);
                         intent.putExtra("status",myStatus);
+                        intent.putExtra("uid",myUserId);
                         startActivity(intent);
 
                     }

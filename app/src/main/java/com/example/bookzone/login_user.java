@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 
@@ -43,6 +47,7 @@ public class login_user extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_user);
@@ -55,14 +60,31 @@ public class login_user extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Validation
                 String email=email_entered.getText().toString();
                 String password=password_entered.getText().toString();
-                if(TextUtils.isEmpty(email)||TextUtils.isEmpty(password))
-                {
-                    Toast.makeText(getApplicationContext(), "Enter Details Properly", Toast.LENGTH_LONG).show();
-
+                if (password.length() < 6) {
+                    password_entered.setError("password minimum contain 6 character");
+                            password_entered.requestFocus();
                 }
-                else {
+                if (password.equals("")) {
+                    password_entered.setError("please enter password");
+                            password_entered.requestFocus();
+                }
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    email_entered.setError("please enter valid email address");
+                            email_entered.requestFocus();
+                }
+                if (email.equals("")) {
+                    email_entered.setError("please enter email address");
+                            email_entered.requestFocus();
+                }
+                if (!email.equals("") &&
+                        password.length() >= 6 &&
+                        !password.equals("")
+                        && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(login_user.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -83,6 +105,7 @@ public class login_user extends AppCompatActivity {
                                 }
                             });
                 }
+
 
             }
         });
@@ -106,5 +129,6 @@ public class login_user extends AppCompatActivity {
         });
 
     }
+
 
 }

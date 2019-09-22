@@ -13,14 +13,23 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class buyer_details extends AppCompatActivity {
     EditText buyer_name,buyer_email,buyer_phone,buyer_address;
     Spinner buyerMethod;
     String method;
+  //  private static final String ALLOWED_CHARACTERS ="0123456789qwertyuiopasdfghjklzxcvbnm";
 
 
     @Override
@@ -38,6 +47,7 @@ public class buyer_details extends AppCompatActivity {
         buyer_address=findViewById(R.id.user_address_buy);
         buyerMethod=findViewById(R.id.user_paymentMethod);
         FloatingActionButton create=findViewById(R.id.user_buy_button);
+
         // Spinner Drop down elements
         final List<String> categories = new ArrayList<String>();
         categories.add("Credit Card");
@@ -52,6 +62,31 @@ public class buyer_details extends AppCompatActivity {
 
         // attaching data adapter to spinner
         buyerMethod.setAdapter(dataAdapter);
+        // Automatic retrive details of user from firebase
+
+        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        String userid=user.getUid();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println(dataSnapshot.getValue().toString());
+                String name=dataSnapshot.child("name").getValue().toString();
+                String phone=dataSnapshot.child("phone").getValue().toString();
+                String email=dataSnapshot.child("email").getValue().toString();
+                String address=dataSnapshot.child("address").getValue().toString();
+                buyer_name.setText(name);
+                buyer_email.setText(email);
+                buyer_phone.setText(phone);
+                buyer_address.setText(address);
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         //Buyer Click option Method
         //get book details from intent
         //get data from intent
@@ -61,6 +96,7 @@ public class buyer_details extends AppCompatActivity {
         final String price=getIntent().getStringExtra("price");
         final String des=getIntent().getStringExtra("des");
         final String status=getIntent().getStringExtra("status");
+        final String uid=getIntent().getStringExtra("uid");
         buyerMethod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -75,9 +111,19 @@ public class buyer_details extends AppCompatActivity {
         });
 
 
+
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //store data to firebase
+//                FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+//                String order=uid;
+//                firebaseDatabase.getReference("Users")
+//                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                        .child("Orders")
+//                        .child(getRandomString())
+//                        .setValue(order);
+
                 //get data
                 String bname =buyer_name.getText().toString();
                 String bemail=buyer_email.getText().toString();
@@ -97,6 +143,7 @@ public class buyer_details extends AppCompatActivity {
                 intent.putExtra("price",price);
                 intent.putExtra("des",des);
                 intent.putExtra("status",status);
+                intent.putExtra("uid",uid);
                 startActivity(intent);
 
 
@@ -104,4 +151,12 @@ public class buyer_details extends AppCompatActivity {
         });
 
     }
+//    private static String getRandomString()
+//    {
+//        final Random random=new Random();
+//        final StringBuilder sb=new StringBuilder(28);
+//        for(int i=0;i<28;++i)
+//            sb.append(ALLOWED_CHARACTERS.charAt(random.nextInt(ALLOWED_CHARACTERS.length())));
+//        return sb.toString();
+//    }
 }
